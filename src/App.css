@@ -19,7 +19,7 @@
   margin-left: 5%;
   margin-top: 7px;
   margin-bottom: 2vh;
-  height: 10vh;
+  height: auto;
   border: 3px solid blueviolet;
   border-radius: 7px;
   
@@ -87,7 +87,7 @@ button {
   background: rgb(65, 65, 176);
   border-radius: 50%;
   color: white;
-  width: 8vw;
+  width: auto;
   
   height: 5vh;
   animation: fadeIn 0.3s ease-in-out;
