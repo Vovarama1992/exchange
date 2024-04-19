@@ -200,9 +200,9 @@ function Menu({ from, to, amount, index, reverse, setter }) {
       <div className="interAction">
         {show && <Result num={num} kind={to} />}
         <button onClick={() => letCaclculate(true)} className="calcButton">
-          {!show ? 'Calculate' : 'Hide'}
+          {'Calculate'}
         </button>
-        {show && <button type="" onClick={() => letCaclculate(false)} className="calcButton">Calculate</button>}
+        {show && <button type="" onClick={() => letCaclculate(false)} className="calcButton">Hide</button>}
       </div>
     </div>
   );
