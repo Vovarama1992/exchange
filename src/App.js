@@ -175,8 +175,12 @@ function Menu({ from, to, amount, index, reverse, setter }) {
     
     if (isNumber && isCurrency) {
       exchange(from, to).then(res => {
+        if (res == "unknown quantity of") {
+          setNum(res)
+        } else {
         res = res * amount;
         setNum(res.toFixed(2));
+        }
       });
     } else {
       setNum("unknown");
@@ -233,9 +237,13 @@ function findMoneys(start) {
 
 async function exchange(from, to) {
   try {
+    
     const res = await fetch(`https://v6.exchangerate-api.com/v6/4f9059fdd169d7383a8a6367/latest/${from}`);
     const json = await res.json();
     const result = json.conversion_rates[to];
+    if (isNaN(result)) {
+      return "unknown quantity of unknown";
+    }
     return result;
   } catch (error) {
     console.error('An error occurred during fetching', error);
