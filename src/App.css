@@ -159,6 +159,10 @@ span {
   background: white;
 
 }
+.center {
+  margin-left: 40%;
+  margin-top: 5%
+}
 
 img {
   width: 25px;

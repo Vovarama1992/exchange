@@ -11,7 +11,15 @@ const defA = [0, "RUB", "USD"];
 const defB = [0, "RUB", "EUR"];
 
 function App() {
-  const [menuList, setMenuList] = useState([defA, defB]);
+  const [menuList, setMenuList] = useState(() => {
+    const savedMenuList = localStorage.getItem('menuList');
+    return savedMenuList ? JSON.parse(savedMenuList) : [defA, defB];
+  });
+
+  
+  useEffect(() => {
+    localStorage.setItem('menuList', JSON.stringify(menuList));
+  }, [menuList]);
 
   function setter(e, index, position) {
     
@@ -80,15 +88,16 @@ function App() {
           <Adder func={addClick}/>}</div>
         )
       })}
+      {menuList.length == 0 && <Adder addclass="center" func={addClick}/>}
       
     </div>
     </FuncContext.Provider>
   );
 }
 
-function Adder({func}) {
+function Adder({func, addclass}) {
   return (
-    <button onClick={func} className="adder" >
+    <button onClick={func} className={`adder ${addclass}`} >
       <img src={Plus}></img>
          
     </button>
@@ -179,7 +188,11 @@ function Menu({from, to, amount, index, reverse, setter }) {
 
 
   function startChange() {
-    
+    const isNumber = !isNaN(parseFloat(amount)) && isFinite(amount) && amount >= 0;
+  
+  
+  const isCurrency = currencies.includes(from.toUpperCase()) || currencies.includes(to.toUpperCase());
+  if (isNumber && isCurrency) {
     
     exchange(from, to).then(res => {
       res = res * amount;
@@ -187,6 +200,8 @@ function Menu({from, to, amount, index, reverse, setter }) {
       
       
      })
+    }
+    else setNum("unknow");
   }
   
   function changeDirectionCalc() {
