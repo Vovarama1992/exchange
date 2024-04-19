@@ -13,9 +13,11 @@
 .menu {
   display: flex;
   flex-direction: row;
+  align-items: center;
   background: white;
   width: 75%;
   margin-left: 5%;
+  margin-top: 7px;
   margin-bottom: 2vh;
   height: 10vh;
   border: 3px solid black;
@@ -74,18 +76,24 @@ input:focus {
 button {
   outline: none;
   border: none;
+  animation: fadeIn 0.5s ease-in-out;
 }
 .calcButton {
   margin-left: 5%;
   margin-bottom: 10px;
-  margin-top: 3px;
+  margin-top: 10%;
   background: rgb(124, 124, 152);
   width: 7vw;
+  width: auto;
+  height: 4vh;
+  animation: fadeIn 0.3s ease-in-out;
 }
 .interAction {
   margin-left: 15px;
   display: flex;
   flex-direction: row;
+  height: auto;
+  animation: fadeIn 0.3s ease-in-out;
 }
 .result {
   display: flex;
@@ -94,10 +102,32 @@ button {
   align-items: center;
   margin-top: 3px;
   width: 10vw;
-  height: 4vh;
+  height: 7vh;
   border: 1px solid black;
   border-radius: 3px;
   margin-bottom: 2vh;
+  padding: 2% 2% 2% 4%;
+  animation: fadeIn 0.3s ease-in-out;
+}
+span {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.vektor {
+  margin-top: 5%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid blue;
+
+}
+.vektor:hover {
+  border: 2px solid blue;
+}
+
+.vektor img {
+  max-width: 100%; 
+  height: auto; 
 }
 
 .adder {
@@ -117,7 +147,31 @@ button {
 
 }
 
+.money {
+  width: 7vw;
+  height: 3vh;
+  
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  background: white;
+
+}
+
 img {
   width: 25px;
   height: 25px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    
+  }
+  to {
+    opacity: 1;
+    
+  }
 }
