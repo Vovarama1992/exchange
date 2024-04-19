@@ -11,20 +11,24 @@ const defA = [0, "RUB", "USD"];
 const defB = [0, "RUB", "EUR"];
 
 function App() {
-  const [menuList, setMenuList] = useState(() => {
-    const savedMenuList = localStorage.getItem('menuList');
-    return savedMenuList ? JSON.parse(savedMenuList) : [defA, defB];
-  });
-
+  const [menuList, setMenuList] = useState([defA, defB]);
+  const savedMenuList = localStorage.getItem('menuList');
+  const parsedMenuList = JSON.parse(savedMenuList);
+  
+  useEffect(() => {
+    if (parsedMenuList && parsedMenuList.length > 0) {
+      setMenuList(parsedMenuList);
+    } else {
+      setMenuList([defA, defB]);
+    }
+  }, []);
   
   useEffect(() => {
     localStorage.setItem('menuList', JSON.stringify(menuList));
   }, [menuList]);
 
   function setter(e, index, position) {
-    
     const value = e.target.textContent;
-    console.log(value);
     const newList = menuList.map((list, ind) => {
       if (ind !== index) {
         return list;
@@ -32,9 +36,8 @@ function App() {
         if (i !== position) {
           return l;
         } else return value;
-      })
-
-    })
+      });
+    });
     setMenuList(newList);
   }
 
@@ -49,21 +52,18 @@ function App() {
     setMenuList(newList);
   }
   
-  
-  function onInputChange( index, key, val) {
-    
-    
+  function onInputChange(index, key, val) {
     const newList = menuList.map((list, i) => {
-            if (i !== index) {
-              return list;
-            } else return list.map((l, i) => {
-              if (i !== key) {
-                return l
-               } else {
-                return val
-              }
-            })
-    })
+      if (i !== index) {
+        return list;
+      } else return list.map((l, i) => {
+        if (i !== key) {
+          return l;
+        } else {
+          return val;
+        }
+      });
+    });
     setMenuList(newList);
   }
 
@@ -71,6 +71,7 @@ function App() {
     const addlist = [0, "RUB", "RUB"];
     setMenuList([...menuList, addlist]);
   }
+  
   function deleteClick(index) {
     const newlist = menuList.filter((menu, i) => i !== index);
     setMenuList(newlist);
@@ -79,183 +80,155 @@ function App() {
   return (
     <FuncContext.Provider value={onInputChange}>
       <div className="container">
-      {menuList.map((menu, index) => {
-        return (
-          <div className="lineBlock"  key={index}>
-          <Delete func={() => deleteClick(index)}/>
-          <Menu setter={setter} index={index}  reverse={reverse} amount={menu[0]} 
-          from={menu[1]} to={menu[2]} />{index === menuList.length - 1 && 
-          <Adder func={addClick}/>}</div>
-        )
-      })}
-      {menuList.length == 0 && <Adder addclass="center" func={addClick}/>}
-      
-    </div>
+        {menuList.map((menu, index) => (
+          <div className="lineBlock" key={index}>
+            <Delete func={() => deleteClick(index)} />
+            <Menu setter={setter} index={index} reverse={reverse} amount={menu[0]} from={menu[1]} to={menu[2]} />
+            {index === menuList.length - 1 && <Adder func={addClick} />}
+          </div>
+        ))}
+        {menuList.length === 0 && <Adder addclass="center" func={addClick} />}
+      </div>
     </FuncContext.Provider>
   );
 }
 
-function Adder({func, addclass}) {
+function Adder({ func, addclass }) {
   return (
-    <button onClick={func} className={`adder ${addclass}`} >
-      <img src={Plus}></img>
-         
+    <button onClick={func} className={`adder ${addclass}`}>
+      <img src={Plus} alt="plus" />
     </button>
-  )
+  );
 }
 
-function Delete({func}) {
+function Delete({ func }) {
   return (
     <button onClick={func} className="minus">
-      <img src={Minus}></img>
+      <img src={Minus} alt="minus" />
     </button>
-  )
+  );
 }
 
-
-
-function Player( {index, vektor, from, to, shower, options, choser, choose, setter} ) {
-  
-  
+function Player({ index, vektor, from, to, shower, options, choser, choose, setter }) {
   const onInput = useContext(FuncContext);
-  const currencyValue = vektor == 1 ? from : to;
-  const column = vektor == 1 ? "From" : "To";
+  const currencyValue = vektor === 1 ? from : to;
+  const column = vektor === 1 ? "From" : "To";
   const finds = findMoneys(currencyValue);
-  
-  
   
   return (
     <div className="block">
       <label htmlFor="text">{column}</label>
-      <br></br>
+      <br />
       <div className="input-wrapper">
-        <input onMouseEnter={() => {
-          shower(true);
-          choser();
-        }
-          }   
-        onChange={(e) => onInput(index, vektor, e.target.value )} 
-        value={currencyValue}
-        id="text" type="text" autoComplete="off"></input>
+        <input
+          onMouseEnter={() => {
+            shower(true);
+            choser();
+          }}
+          onChange={(e) => onInput(index, vektor, e.target.value)}
+          value={currencyValue}
+          id="text"
+          type="text"
+          autoComplete="off"
+        />
       </div>
-      {options && choose == column && finds.map((find, i) => {
-        return (
-          <div onClick={(e) => setter(e, index, vektor)} key={i} style={{ marginTop: `${i * 3}vh` }} 
-          className="money">{find}</div>
-        )
-      })}
-      </div>
-   )
+      {options && choose === column && finds.map((find, i) => (
+        <div onClick={(e) => setter(e, index, vektor)} key={i} style={{ marginTop: `${i * 3}vh` }} className="money">
+          {find}
+        </div>
+      ))}
+    </div>
+  );
 }
 
-
-
-function Amount({index, amount}) {
-  
+function Amount({ index, amount }) {
   const onInput = useContext(FuncContext);
   
-  
   return (
-    <div  className="block">
-      <label htmlFor="text">Amount</label><div className="input-wrapper">
-        <input onChange={(e) => onInput(index, 0, e.target.value)} value={amount}
-        id="text" type="text" autoComplete="off"></input>
+    <div className="block">
+      <label htmlFor="text">Amount</label>
+      <div className="input-wrapper">
+        <input onChange={(e) => onInput(index, 0, e.target.value)} value={amount} id="text" type="text" autoComplete="off" />
       </div>
-      </div>
-   )
-
+    </div>
+  );
 }
 
-function Menu({from, to, amount, index, reverse, setter }) {
+function Menu({ from, to, amount, index, reverse, setter }) {
   const [show, setShow] = useState(false);
   const [options, setOptions] = useState(false);
   const [choose, setChoose] = useState(null);
   const [num, setNum] = useState(0);
+  
   function showOptions(toShow) {
-    if (toShow) {
-      setOptions(true);
-    } else setOptions(false);
+    setOptions(toShow);
   }
   
   function letCaclculate(changeShow) {
-       if (changeShow) {
-       setShow(!show);
-       }
-       startChange();
+    setShow(changeShow);
+    startChange();
   }
-
-  
-
 
   function startChange() {
     const isNumber = !isNaN(parseFloat(amount)) && isFinite(amount) && amount >= 0;
-  
-  
-  const isCurrency = currencies.includes(from.toUpperCase()) || currencies.includes(to.toUpperCase());
-  if (isNumber && isCurrency) {
+    const isCurrency = currencies.includes(from.toUpperCase()) || currencies.includes(to.toUpperCase());
     
-    exchange(from, to).then(res => {
-      res = res * amount;
-      setNum(res.toFixed(2));
-      
-      
-     })
+    if (isNumber && isCurrency) {
+      exchange(from, to).then(res => {
+        res = res * amount;
+        setNum(res.toFixed(2));
+      });
+    } else {
+      setNum("unknown");
     }
-    else setNum("unknow");
   }
   
   function changeDirectionCalc() {
-      [from, to] = [to, from];
-      reverse(index);
-      startChange();
-    
+    [from, to] = [to, from];
+    reverse(index);
+    startChange();
   }
+  
   return (
     <div className="calculate">
-    
       <div className="menu" onMouseLeave={() => showOptions(false)}>
-      
-        <Amount amount={amount} index={index}/>
-      
-          <Player  setter={setter} choser={() => setChoose("From")} choose={choose}  from={from} options={options} shower={showOptions} vektor={1} index={index}/>
-          <ExchangeVektor onVektorClick={changeDirectionCalc} />
-<Player  setter={setter} choser={() => setChoose("To")} choose={choose} vektor={2} options={options} shower={showOptions} to={to} index={index}/>
+        <Amount amount={amount} index={index} />
+        <Player setter={setter} choser={() => setChoose("From")} choose={choose} from={from} options={options} shower={showOptions} vektor={1} index={index} />
+        <ExchangeVektor onVektorClick={changeDirectionCalc} />
+        <Player setter={setter} choser={() => setChoose("To")} choose={choose} vektor={2} options={options} shower={showOptions} to={to} index={index} />
       </div>
       <div className="interAction">
-        {show && <Result num={num} kind={to}/>} {<button onClick={() => letCaclculate(true)} className="calcButton">
-        {!show ? 'Calculate' : 'Hide'}</button>}
-        {show && <button  type="" onClick={() => letCaclculate(false)} className="calcButton">
-        Calculate</button>}
+        {show && <Result num={num} kind={to} />}
+        <button onClick={() => letCaclculate(true)} className="calcButton">
+          {!show ? 'Calculate' : 'Hide'}
+        </button>
+        {show && <button type="" onClick={() => letCaclculate(false)} className="calcButton">Calculate</button>}
       </div>
-    
     </div>
-  )
+  );
 }
 
-function ExchangeVektor( {onVektorClick} ) {
+function ExchangeVektor({ onVektorClick }) {
   return (
     <div onClick={onVektorClick} className="vektor">
-            
-              <img src={VektorBack}></img>
-              
-            </div>
-  )
+      <img src={VektorBack} alt="vektor-back" />
+    </div>
+  );
 }
 
-function Result({num, kind}) {
+function Result({ num, kind }) {
   return (
     <div className="result">
       <span>{num} {kind}</span>
-
     </div>
-  )
+  );
 }
 
 function findMoneys(start) {
   start = transliterate(start);
-     start = start.toUpperCase();
-     const curs = currencies.filter(cur => cur.startsWith(start));
-     return curs;
+  start = start.toUpperCase();
+  const curs = currencies.filter(cur => cur.startsWith(start));
+  return curs;
 }
 
 async function exchange(from, to) {
@@ -272,10 +245,10 @@ async function exchange(from, to) {
 
 function transliterate(text) {
   const rusToLatMap = {
-      "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "yo", "ж": "zh", "з": "z", "и": "i",
-      "й": "y", "к": "k", "л": "l", "м": "m", "н": "n", "о": "o", "п": "p", "р": "r", "с": "s", "т": "t",
-      "у": "u", "ф": "f", "х": "h", "ц": "c", "ч": "ch", "ш": "sh", "щ": "sch", "ъ": "", "ы": "y", "ь": "'",
-      "э": "e", "ю": "yu", "я": "ya"
+    "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "yo", "ж": "zh", "з": "z", "и": "i",
+    "й": "y", "к": "k", "л": "l", "м": "m", "н": "n", "о": "o", "п": "p", "р": "r", "с": "s", "т": "t",
+    "у": "u", "ф": "f", "х": "h", "ц": "c", "ч": "ch", "ш": "sh", "щ": "sch", "ъ": "", "ы": "y", "ь": "'",
+    "э": "e", "ю": "yu", "я": "ya"
   };
 
   return text.split('').map(char => rusToLatMap[char.toLowerCase()] || char).join('');
