@@ -125,7 +125,7 @@ function Player({ index, vektor, from, to, shower, options, choser, choose, sett
   useEffect(() => {
     function handleResize() {
       if (window.innerWidth <= 768) {
-      setIntervalH(5);
+      setIntervalH(6);
       }
       else setIntervalH(3);
     }
