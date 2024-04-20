@@ -7,7 +7,7 @@
   overflow: scroll;
   top: 5vh;
   left: 10vw;
-  background: rgb(238, 239, 232);
+  background: blue;
 }
 @media screen and (max-width: 768px) {
   .container {
@@ -101,6 +101,7 @@ button.calcButton {
   border: none;
   width: 8%;
   margin-top: 5%;
+  padding-left: 3px;
   
   
 }
