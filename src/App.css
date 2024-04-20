@@ -2,184 +2,144 @@
   border-radius: 5px;
   position: relative;
   width: 50vw;
-  height: 70vh;
-  max-height: 75vh;
+  height: 90vh;
+  max-height: 100vh;
   overflow: scroll;
-  top: 15vh;
-  left: 20vw;
+  top: 5vh;
+  left: 10vw;
   background: rgb(238, 239, 232);
 }
+@media screen and (max-width: 768px) {
+  .container {
+    width: 100vw; 
+    left: 0vw;
+    top: 0vh;
+}
+   button.minus {
+    width: 6vw;
+   }
+   button.adder {
+    width: 9vw;
+   }
+}
+
 
 .menu {
   display: flex;
   flex-direction: row;
   align-items: center;
   background: white;
-  width: 75%;
-  margin-left: 5%;
-  margin-top: 7px;
-  margin-bottom: 2vh;
-  height: auto;
+  width: 90%;
+  padding: 1% 2% 1% 2%;
+  
+  margin-top: 2%;
+  margin-bottom: 2%;
+  height: 70%;
   border: 3px solid blueviolet;
   border-radius: 7px;
   
 }
-.calculate {
+
+
+
+.columnSideOfMenu {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  
+}
+
+.interAction {
+  height: 30%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+
+}
+
+button {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  
+  border-radius: 50%;
+  background: none;
+  padding: 0;
+  text-align: center; 
+}
+button.adder, button.minus {
+  border: none;
+}
+
+button.calcButton {
+  color: white;
+  background: rgb(47, 17, 75);
+  width: auto;
+  height: auto;
+  padding: 7px;
+  border: none;
+  margin: 0 3px;
+  
+
 }
 
 
-.block {
-  width: 10vw;
-  height: 70%;
-  overflow: hidden;
- 
+.arrows {
+  max-width: 90%;
   
+}
+
+.arrowWrapper {
+  border: none;
+  width: 7%;
+  margin-top: 3%;
   
-  padding: 5px;
+}
+
+button img {
+  max-width: 100%;
+  max-height: 100%;
+  display: inline-block;
+  vertical-align: middle; 
+}
+.minus {
+  width: 3vw;
+  border: none;
+  margin-top: 11px;
   
-  
-  
+}
+.adder {
+  width: 4vw;
 }
 
 .input-wrapper {
   border: 1px solid blueviolet;
-  border-radius: 1px;
-  border-right: 1px solid blueviolet;
+  border-radius: 4px;
+  padding: 1px;
 }
+
 input {
-  outline: none;
+  max-width: 90%;
   border: none;
-  width: 4vw;
-}
-input:focus {
   outline: none;
 }
-.lineBlock {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  
-}
-.minus {
-  width: 3vw;
-  height: 3vh;
-  border-radius: 50%;
-  
-  margin-left: 7px;
-  margin-bottom: 32px;
-  background-size: contain;
-  
-}
 
-button {
-  outline: none;
-  border: none;
-  animation: fadeIn 0.5s ease-in-out;
-}
-.calcButton {
-  margin-left: 5%;
-  margin-bottom: 10px;
-  margin-top: 10%;
-  background: rgb(65, 65, 176);
-  border-radius: 50%;
-  color: white;
-  width: auto;
-  
-  height: 5vh;
-  animation: fadeIn 0.3s ease-in-out;
-}
-.interAction {
-  margin-left: 15px;
-  display: flex;
-  flex-direction: row;
-  height: auto;
-  animation: fadeIn 0.3s ease-in-out;
-}
-.result {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  margin-top: 3px;
-  width: auto;
-  height: auto;
-  border: 3px solid blueviolet;
-  border-radius: 3px;
-  margin-bottom: 2vh;
-  padding: 2% 2% 2% 4%;
-  animation: fadeIn 0.3s ease-in-out;
-}
-span {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-.vektor {
-  margin-top: 5%;
-  width: 20px;
-  height: 20px;
-  
-
-}
-.vektor:hover {
-  border-radius: 50%;
-  border: 2px solid blue;
-}
-
-.vektor img {
-  max-width: 100%; 
-  height: auto; 
-}
-
-.adder {
-  
-  border: 2px solid blueviolet;
-  margin-bottom: 22px;
-  margin-left: 0vw;
-  
-  width: 6vw;
-  height: 6vh;
-  border-radius: 50%;
-  
-  margin-top: 3px;
-  margin-bottom: 5vh;
-  background-size: contain;
-  
-
+.block {
+  width: 29%;
+  padding-left: 1%;
 }
 
 .money {
   width: 7vw;
-  height: 3vh;
-  
+  height: auto;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   position: absolute;
+  z-index: 9999;
   background: white;
 
-}
-.center {
-  margin-left: 40%;
-  margin-top: 5%
-}
-
-img {
-  width: 25px;
-  height: 25px;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    
-  }
-  to {
-    opacity: 1;
-    
-  }
 }

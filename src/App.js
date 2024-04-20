@@ -7,7 +7,7 @@ import VektorBack from './vektorBack.png';
 
 const FuncContext = createContext(null);
 
-const defA = [0, "RUB", "USD"];
+const defA = [0, "USD", "USD"];
 const defB = [0, "RUB", "EUR"];
 
 function App() {
@@ -68,26 +68,30 @@ function App() {
   }
 
   function addClick() {
-    const addlist = [0, "RUB", "RUB"];
+    const addlist = [0, "RUB", "USD"];
     setMenuList([...menuList, addlist]);
   }
-  
+
+
   function deleteClick(index) {
     const newlist = menuList.filter((menu, i) => i !== index);
     setMenuList(newlist);
   }
   
+  
   return (
     <FuncContext.Provider value={onInputChange}>
       <div className="container">
         {menuList.map((menu, index) => (
-          <div className="lineBlock" key={index}>
-            <Delete func={() => deleteClick(index)} />
-            <Menu setter={setter} index={index} reverse={reverse} amount={menu[0]} from={menu[1]} to={menu[2]} />
-            {index === menuList.length - 1 && <Adder func={addClick} />}
+          <div  key={index}>
+            
+            <Menu addClick={addClick} setter={setter} deleteClick={deleteClick} 
+             index={index} isLast={index === menuList.length - 1} reverse={reverse}
+             amount={menu[0]} from={menu[1]} to={menu[2]} />
+            
           </div>
         ))}
-        {menuList.length === 0 && <Adder addclass="center" func={addClick} />}
+        
       </div>
     </FuncContext.Provider>
   );
@@ -103,17 +107,37 @@ function Adder({ func, addclass }) {
 
 function Delete({ func }) {
   return (
-    <button onClick={func} className="minus">
-      <img src={Minus} alt="minus" />
-    </button>
+    <div>
+      <button className="minus" onClick={func} >
+        <img src={Minus} alt="minus" />
+      </button>
+    </div>
   );
 }
 
 function Player({ index, vektor, from, to, shower, options, choser, choose, setter }) {
+  const [intervalH, setIntervalH] = useState(3);
   const onInput = useContext(FuncContext);
   const currencyValue = vektor === 1 ? from : to;
   const column = vektor === 1 ? "From" : "To";
   const finds = findMoneys(currencyValue);
+
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth <= 768) {
+      setIntervalH(5);
+      }
+      else setIntervalH(3);
+    }
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+  
+
   
   return (
     <div className="block">
@@ -133,7 +157,7 @@ function Player({ index, vektor, from, to, shower, options, choser, choose, sett
         />
       </div>
       {options && choose === column && finds.map((find, i) => (
-        <div onClick={(e) => setter(e, index, vektor)} key={i} style={{ marginTop: `${i * 3}vh` }} className="money">
+        <div onClick={(e) => setter(e, index, vektor)} key={i} style={{ marginTop: `${i * intervalH}vh` }} className="money">
           {find}
         </div>
       ))}
@@ -154,7 +178,7 @@ function Amount({ index, amount }) {
   );
 }
 
-function Menu({ from, to, amount, index, reverse, setter }) {
+function Menu({ from, to, amount, index, reverse, setter, addClick, deleteClick, isLast }) {
   const [show, setShow] = useState(false);
   const [options, setOptions] = useState(false);
   const [choose, setChoose] = useState(null);
@@ -192,10 +216,14 @@ function Menu({ from, to, amount, index, reverse, setter }) {
     reverse(index);
     startChange();
   }
+
+  
   
   return (
-    <div className="calculate">
+    <div className="columnSideOfMenu">
+      
       <div className="menu" onMouseLeave={() => showOptions(false)}>
+      <Delete func={() => deleteClick(index)} />
         <Amount amount={amount} index={index} />
         <Player setter={setter} choser={() => setChoose("From")} choose={choose} from={from} options={options} shower={showOptions} vektor={1} index={index} />
         <ExchangeVektor onVektorClick={changeDirectionCalc} />
@@ -207,16 +235,20 @@ function Menu({ from, to, amount, index, reverse, setter }) {
           {'Calculate'}
         </button>
         {show && <button type="" onClick={() => letCaclculate(false)} className="calcButton">Hide</button>}
+        {isLast && <Adder addclass="adder" func={addClick} />}
       </div>
+      
     </div>
   );
 }
 
 function ExchangeVektor({ onVektorClick }) {
   return (
-    <div onClick={onVektorClick} className="vektor">
-      <img src={VektorBack} alt="vektor-back" />
-    </div>
+    
+      <button className="arrowWrapper" onClick={onVektorClick}>
+      <img className="arrows" src={VektorBack} alt="vektor-back" />
+      </button>
+    
   );
 }
 
