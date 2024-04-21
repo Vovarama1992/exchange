@@ -7,7 +7,7 @@ import VektorBack from './vektorBack.png';
 
 const FuncContext = createContext(null);
 
-const defA = [0, "USD", "USD"];
+const defA = [0, "RUB", "USD"];
 const defB = [0, "RUB", "EUR"];
 
 function App() {
@@ -39,6 +39,7 @@ function App() {
       });
     });
     setMenuList(newList);
+   
   }
 
   function reverse(index) {
@@ -65,6 +66,7 @@ function App() {
       });
     });
     setMenuList(newList);
+    
   }
 
   function addClick() {
@@ -91,6 +93,7 @@ function App() {
             
           </div>
         ))}
+        {menuList.length == 0 && <Adder addclass="adderOnlyOne" func={addClick} />}
         
       </div>
     </FuncContext.Provider>
@@ -165,14 +168,36 @@ function Player({ index, vektor, from, to, shower, options, choser, choose, sett
   );
 }
 
-function Amount({ index, amount }) {
+function Input({index, amount, from, to, inputControl}) {
+  useEffect(() => {
+    if (currencies.includes(from) && currencies.includes(to)) {
+    inputControl(amount, from, to);
+  }}, [amount, from, to])
   const onInput = useContext(FuncContext);
+  function devicedOnInput(e) {
+    onInput(index, 0, e.target.value);
+    
+
+  }
+  return (
+    
+      <input className="inputDiv" onChange={devicedOnInput} value={amount}
+       id="text" type="text" autoComplete="off" />
+    
+
+  )
+}
+
+function Amount({ index, amount, from, to, inputControl }) {
+  
   
   return (
     <div className="block">
       <label htmlFor="text">Amount</label>
       <div className="input-wrapper">
-        <input onChange={(e) => onInput(index, 0, e.target.value)} value={amount} id="text" type="text" autoComplete="off" />
+        <Input index={index} amount={amount} inputControl={inputControl} from={from} to={to}/>
+        
+      
       </div>
     </div>
   );
@@ -188,13 +213,14 @@ function Menu({ from, to, amount, index, reverse, setter, addClick, deleteClick,
     setOptions(toShow);
   }
   
-  function letCaclculate(changeShow) {
+  function letCaclculate(changeShow, amount, from, to) {
     setShow(changeShow);
-    startChange();
+    startChange(amount, from, to);
   }
 
-  function startChange() {
+  function startChange(amount, from, to) {
     const isNumber = !isNaN(parseFloat(amount)) && isFinite(amount) && amount >= 0;
+    console.log(from, to);
     const isCurrency = currencies.includes(from.toUpperCase()) || currencies.includes(to.toUpperCase());
     
     if (isNumber && isCurrency) {
@@ -224,17 +250,17 @@ function Menu({ from, to, amount, index, reverse, setter, addClick, deleteClick,
       
       <div className="menu" onMouseLeave={() => showOptions(false)}>
       <Delete func={() => deleteClick(index)} />
-        <Amount amount={amount} index={index} />
+        <Amount amount={amount} index={index} from={from} to={to} inputControl={startChange} />
         <Player setter={setter} choser={() => setChoose("From")} choose={choose} from={from} options={options} shower={showOptions} vektor={1} index={index} />
         <ExchangeVektor onVektorClick={changeDirectionCalc} />
         <Player setter={setter} choser={() => setChoose("To")} choose={choose} vektor={2} options={options} shower={showOptions} to={to} index={index} />
       </div>
       <div className="interAction">
         {show && <Result num={num} kind={to} />}
-        <button onClick={() => letCaclculate(true)} className="calcButton">
+        <button onClick={() => letCaclculate(true, amount, from, to)}  className="calcButton">
           {'Calculate'}
         </button>
-        {show && <button type="" onClick={() => letCaclculate(false)} className="calcButton">Hide</button>}
+        {show && <button type="" onClick={() => letCaclculate(false, amount, from, to)} className="calcButton">Hide</button>}
         {isLast && <Adder addclass="adder" func={addClick} />}
       </div>
       
@@ -267,7 +293,7 @@ function findMoneys(start) {
   return curs;
 }
 
-async function exchange(from, to) {
+async function exchange(from = "", to = "") {
   try {
     
     const res = await fetch(`https://v6.exchangerate-api.com/v6/4f9059fdd169d7383a8a6367/latest/${from}`);
