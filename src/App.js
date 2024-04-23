@@ -225,9 +225,12 @@ function Menu({ from, to, amount, index, reverse, setter, addClick, deleteClick,
     
     if (isNumber && isCurrency) {
       exchange(from, to).then(res => {
-        if (res == "unknown quantity of") {
+        if (res == "unknown quantity") {
           setNum(res)
-        } else {
+        } else if (res == "апи недоступен, исчерпал лимит") {
+          setNum(res);
+        }
+        else {
         res = res * amount;
         setNum(res.toFixed(2));
         }
@@ -256,7 +259,7 @@ function Menu({ from, to, amount, index, reverse, setter, addClick, deleteClick,
         <Player setter={setter} choser={() => setChoose("To")} choose={choose} vektor={2} options={options} shower={showOptions} to={to} index={index} />
       </div>
       <div className="interAction">
-        {show && <Result num={num} kind={to} />}
+        {show && <Result num={num}  kind={num !== "апи недоступен, исчерпал лимит" && to}/>}
         <button onClick={() => letCaclculate(true, amount, from, to)}  className="calcButton">
           {'Calculate'}
         </button>
@@ -321,4 +324,3 @@ function transliterate(text) {
 }
 
 export default App;
-choose
