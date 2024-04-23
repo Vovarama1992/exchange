@@ -300,12 +300,12 @@ async function exchange(from = "", to = "") {
     const json = await res.json();
     const result = json.conversion_rates[to];
     if (isNaN(result)) {
-      return "unknown quantity of unknown";
+      return "unknown quantity";
     }
     return result;
   } catch (error) {
     console.error('An error occurred during fetching', error);
-    return "unknown quantity of"; 
+    return "апи недоступен, исчерпал лимит"; 
   }
 }
 
