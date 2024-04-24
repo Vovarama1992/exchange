@@ -299,7 +299,7 @@ function findMoneys(start) {
 async function exchange(from = "", to = "") {
   try {
     
-    const res = await fetch(`https://v6.exchangerate-api.com/v6/4f9059fdd169d7383a8a6367/latest/${from}`);
+    const res = await fetch(`https://v6.exchangerate-api.com/v6/88f5d1f8113ec088c6cced4e/latest/${from}`);
     const json = await res.json();
     const result = json.conversion_rates[to];
     if (isNaN(result)) {
